@@ -2,6 +2,63 @@ import pygame
 import sys
 import numpy as np
 
+# class Timer(Animaux):
+
+#     def __init__(self, chronon, chronon_count, chronon_count_reproduction):
+#         Animaux.init(self, chronon, chronon_count, chronon_count_reproduction)
+
+#     def timer(self, chronon):
+
+#         while self.chronon_count < 2:
+#             for seconds in range(1, self.chronon+1):
+#                 print(seconds)
+#                 time.sleep(1)
+
+#             self.chronon_count += 1
+#             self.chronon_count_reproduction += 1
+#             # self.energie -= 1 (pour les requins uniquement)
+#             print(f"Un nouveau jour vient de passer, ({self.chronon_count} chronon(s))")
+#             time.sleep(2) #temps d'attente entre chaque chronon/jour
+
+
+# temps = Timer(5,0)
+# temps.timer(5)
+
+class Animaux(pygame.sprite.Sprite):
+
+    def __init__(self, chronon, chronon_count, chronon_count_reproduction, x, y):
+        super().__init__()
+        self.chronon = chronon
+        self.chronon_count = chronon_count
+        self.chronon_count_reproduction = chronon_count_reproduction
+        self.rect.x = x
+        self.rect.y = y
+
+    def reproduction(self, chronon_count_reproduction): #seuil de reproduction identiques pour poissons et requins
+        if self.chronon_count_reproduction >= 3:
+            self.old_poisson = pygame.Rect.copy(self.poisson.rect)
+            self.old_requin = pygame.Rect.copy(self.requin.rect)
+            self.chronon_count_reproduction = 0
+
+    #def radar cases voisines
+
+class Poissons(Animaux):
+    pass
+
+    def __init__(self, chronon, chronon_count, poisson):
+        Animaux.init(self, chronon, chronon_count)
+        self.poisson = poisson
+
+    # def reproduction(self, chronon_count_reproduction):
+    #     if self.chronon_count_reproduction >= 3:
+    #         self.old_poisson = pygame.Rect.copy(self.poisson.rect)
+    #         self.chronon_count_reproduction = 0
+
+
+    def deplacements_poissons(self, poisson):
+        #cases vides uniquement
+        
+
 class Poisson(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
