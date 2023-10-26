@@ -1,6 +1,6 @@
 import pygame
 import sys
-
+import numpy as np
 
 class Poisson(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -26,6 +26,10 @@ taille_case = largeur // 15
 # Création de la fenêtre
 fenetre = pygame.display.set_mode((largeur, hauteur))
 
+
+grille_poissons = [[False] * (largeur // taille_case) for _ in range(hauteur // taille_case)]
+
+
 # Couleurs
 blanc = (255, 255, 255)
 noir = (0, 0, 0)
@@ -36,13 +40,20 @@ tous_sprites = pygame.sprite.Group()
 
 # Position de la case pour les poissons
 positions_poissons = [(0, 1), (3, 5), (6, 8)]  # Exemple : positionnez 3 poissons à différentes positions
+new_poisson = [(0, 1), (5, 5), (8, 8)]
+
 
 for x_case, y_case in positions_poissons:
-    poisson = Poisson(x_case * taille_case, y_case * taille_case)
-    tous_sprites.add(poisson)
+    if not grille_poissons[y_case][x_case]:
+        grille_poissons[y_case][x_case] = True  # Marquez la case comme occupée par un poisson
+        poisson = Poisson(x_case * taille_case, y_case * taille_case)
+        tous_sprites.add(poisson)
 
-
-
+for x_case, y_case in new_poisson:
+    if not grille_poissons[y_case][x_case]:
+        grille_poissons[y_case][x_case] = True  # Marquez la case comme occupée par un poisson
+        poisson = Poisson(x_case * taille_case, y_case * taille_case)
+        tous_sprites.add(poisson)
 
 running = True
 while running:
@@ -57,10 +68,12 @@ while running:
     for y in range(0, hauteur, taille_case):
         pygame.draw.line(fenetre, noir, (0, y), (largeur, y))
 
+    
     tous_sprites.update()
     tous_sprites.draw(fenetre)
 
     pygame.display.update()
+
 
 # Quitter Pygame
 pygame.quit()
