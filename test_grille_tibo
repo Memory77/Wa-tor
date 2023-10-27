@@ -1,0 +1,88 @@
+import pygame, sys
+import random
+
+
+
+
+
+class Poisson(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__()
+        self.image = pygame.image.load('img/poisson.png')
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.temps_reproduction_poisson = 0  # age du poisson en chronons
+
+
+
+
+
+
+
+#   GRILLE
+
+pygame.init()
+
+WIDTH = HEIGHT = 1000
+#grille = pygame.Surface((WIDTH, HEIGHT))
+
+
+screen = pygame.display.set_mode((WIDTH,HEIGHT))
+screen.fill(pygame.Color("white"))
+
+
+grille = screen.copy()
+
+#color borders cases
+color = (0,0,0) #black
+
+
+
+
+
+
+
+
+nombre_poissons = 3
+positions_poissons = []
+
+tous_sprites = pygame.sprite.Group()
+
+
+
+
+fish = Poisson(100*(WIDTH/10), 100*(HEIGHT/10))
+
+
+fish_position = (300,300)
+screen.blit(grille, fish)
+
+
+
+
+
+
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            False
+            pygame.quit()
+            exit()
+
+    for x in range(0, WIDTH, 100): #grille de 10 cases 100x100
+        pygame.draw.line(screen, color, (1,x), (WIDTH,x), 2)
+        pygame.draw.line(screen, color, (x,1), (x,HEIGHT), 2)
+
+    pygame.display.update()
+    
+
+
+
+
+    # screen.blit(fish,(pygame.Surface.get_width(screen)*0.1,pygame.Surface.get_width(screen)*0.1))
+    # position = fish.get_rect()
+    # new_position = fish.move((pygame.Surface.get_width(screen)*0.3), (pygame.Surface.get_width(screen)*0.3))
+    # screen.blit()
+
+
