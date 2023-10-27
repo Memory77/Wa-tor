@@ -19,6 +19,7 @@ class Poisson(pygame.sprite.Sprite):
         self.temps_reproduction_poisson += 1
         if self.temps_reproduction_poisson >= 30:
             self.reproduire()
+            temps_temps_reproduction_poisson = 0
 
     def reproduire(self):
         # directions possibles pour la reproduction, ce sera jamais 0 0 car c'est le parent
