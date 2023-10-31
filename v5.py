@@ -138,6 +138,10 @@ class Requin(Poisson):
     #         self.kill()
 
 
+
+
+
+    
 # Initialisation de Pygame
 pygame.init()
 
