@@ -95,7 +95,7 @@ class Requin(Poisson):
         self.rect.y = y  
         self.temps_starvation_requin = 4
         self.temps_reproduction_requin = 6
-        self.energie = 4
+        self.energie = 3
         self.grille_poisson = grille_poisson
         self.case_size = case_size
         
