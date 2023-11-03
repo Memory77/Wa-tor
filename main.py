@@ -11,8 +11,8 @@ def main():
     largeur, hauteur, taille_case = 700,700, 50  # Dimensions du tableau et taille des cases
 
     tableau = Tableau(largeur, hauteur, taille_case)  # Crée le tableau du jeu
-    image_poisson = pygame.image.load("Wa-tor/img/poisson2.gif")  # Charge l'image du poisson
-    image_requin = pygame.image.load("Wa-tor/img/téléchargement.jpeg")  # Charge l'image du requin
+    image_poisson = pygame.image.load("img/poisson2.gif")  # Charge l'image du poisson
+    image_requin = pygame.image.load("img/téléchargement.jpeg")  # Charge l'image du requin
 
 
     x_poisson, y_poisson = 50, 50  # Position initiale du poisson
