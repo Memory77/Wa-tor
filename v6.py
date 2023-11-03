@@ -91,19 +91,21 @@ class Requin(Poisson):
         super().__init__(x, y, monde)
         self.image = pygame.image.load('img/requin.png')
         self.rect = self.image.get_rect()
-        self.temps_starvation_requin = 30  # Augmentation du temps avant la starvation
-        self.energie = 30  # Augmentation de l'énergie initiale
+        self.temps_starvation_requin = 30 
+        self.energie = 30 
         self.cpt_sans_mange = 0
         self.temps_reproduction_requin = 3
         
     def update(self):
-        self.gestion_energie()
+        a_mange = self.gestion_energie()
         ancienne_position_x = self.rect.x
         ancienne_position_y = self.rect.y
-        super().deplacer()
+        super().update()
+        # if not a_mange:
+        #     super().deplacer()
 
-        if self.chronon >= self.temps_reproduction_requin:
-            super().reproduire(ancienne_position_x, ancienne_position_y)
+        # if self.chronon >= self.temps_reproduction_requin:
+        #     super().reproduire(ancienne_position_x, ancienne_position_y)
             
 
     
@@ -133,10 +135,12 @@ class Requin(Poisson):
         if not a_mange:
             self.energie -= 1
             self.cpt_sans_mange += 1
-
+            
         if self.energie <= 0 or self.cpt_sans_mange == self.temps_starvation_requin:
             self.kill()  
             print("je suis mort")
+        
+        
             
 
                         
