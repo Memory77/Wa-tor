@@ -13,7 +13,16 @@ class Monde:
         self.grille_poissons = [[False] * (largeur // case_size) for _ in range(hauteur // case_size)]
         self.poissons_tab = pygame.sprite.Group()
         self.requins_tab = pygame.sprite.Group()
-
+        self.grille_algues = [[False] * (largeur // case_size) for _ in range(hauteur // case_size)]
+        self.algues_tab = pygame.sprite.Group()
+    
+    def ajout_algue(self, x, y):
+        nouvelle_algue = Algue(x, y, self)
+        self.algues_tab.add(nouvelle_algue)
+        index_x = x // self.case_size
+        index_y = y // self.case_size
+        self.grille_algues[index_y][index_x] = True
+        
     def ajout_poisson(self, x, y):
         nouveau_poisson = Poisson(x, y, self)
         self.poissons_tab.add(nouveau_poisson)
@@ -27,17 +36,25 @@ class Monde:
         pygame.display.set_caption("Déplacement et reproduction d'animaux")
         ocean = (176, 224, 230)
         fenetre.fill(ocean)
+        self.algues_tab.draw(fenetre)
         self.poissons_tab.draw(fenetre)
         self.requins_tab.draw(fenetre)
         pygame.display.update()
 
+class Algue(pygame.sprite.Sprite):
+    def __init__(self, x, y, monde):
+        super().__init__()
+        self.image = pygame.image.load('img/algues.png')
+        self.rect = self.image.get_rect(topleft=(x, y))
+        self.monde = monde
+        
 class Poisson(pygame.sprite.Sprite):
     def __init__(self, x, y, monde):
         super().__init__()
-        self.image = pygame.image.load('img/poisson-clown.png')
+        self.image = pygame.image.load('img/poisson5.png')
         self.rect = self.image.get_rect(topleft=(x, y))
         self.chronon = 0
-        self.temps_reproduction_poisson = 2
+        self.temps_reproduction_poisson = 3
         self.monde = monde
         
     def deplacer(self):
@@ -65,7 +82,7 @@ class Poisson(pygame.sprite.Sprite):
             index_y = nouvelle_position_y // self.monde.case_size
             
             # Vérifier si la nouvelle position est libre
-            if not self.monde.grille_poissons[index_y][index_x]:
+            if not self.monde.grille_poissons[index_y][index_x] and not self.monde.grille_algues[index_y][index_x]:
                 # Libération de l'ancienne case
                 index_x_ancien = self.rect.x // self.monde.case_size
                 index_y_ancien = self.rect.y // self.monde.case_size
@@ -111,11 +128,11 @@ class Poisson(pygame.sprite.Sprite):
 class Requin(Poisson):
     def __init__(self, x, y, monde):
         super().__init__(x, y, monde)
-        self.image = pygame.image.load('img/requin.png')
+        self.image = pygame.image.load('img/req.png')
         self.rect = self.image.get_rect(topleft=(x, y))
-        self.temps_starvation_requin = 3
-        self.temps_reproduction_requin = 4
-        self.energie = 4
+        self.temps_survie_requin = 8
+        self.temps_reproduction_requin = 10
+        self.energie = 10
         self.cpt_sans_mange = 0
         
     def update(self):
@@ -144,7 +161,7 @@ class Requin(Poisson):
                     if isinstance(fish, Poisson) and not isinstance(fish, Requin):
                         if fish.rect.x == nouvelle_position_x and fish.rect.y == nouvelle_position_y:
                             fish.kill()  # enlève le poisson du groupe de sprites
-                            print("poisson mangé")
+                            # print("poisson mangé")
                             index_x = nouvelle_position_x // self.monde.case_size
                             index_y = nouvelle_position_y // self.monde.case_size
                             self.monde.grille_poissons[index_y][index_x] = False  #libère la grille
@@ -159,7 +176,7 @@ class Requin(Poisson):
         else:
             self.cpt_sans_mange = 0  # Réinitialiser si le requin a mangé
 
-        if self.energie <= 0 or self.cpt_sans_mange >= self.temps_starvation_requin:
+        if self.energie <= 0 or self.cpt_sans_mange >= self.temps_survie_requin:
             self.kill()  
 
 
@@ -193,13 +210,18 @@ monde = Monde(1000, 1000, 50)
 #     monde.ajout_requin(x, y)
         
 # Ajout de poissons et requins dans le monde
-monde.ajout_poisson(100, 100)
+monde.ajout_poisson(100, 900)
 monde.ajout_poisson(300, 300)
 monde.ajout_poisson(500, 400)
-monde.ajout_requin(200, 200)
-monde.ajout_requin(500, 500)
-monde.ajout_requin(800, 500)
-monde.ajout_requin(900, 800)
+monde.ajout_poisson(800, 800)
+monde.ajout_requin(100, 500)
+monde.ajout_requin(800, 100)
+monde.ajout_requin(200, 500)
+monde.ajout_requin(100, 100)
+monde.ajout_algue(500, 750)
+monde.ajout_algue(200, 200)
+monde.ajout_algue(800, 200)
+
 # Boucle principale
 running = True
 while running:
