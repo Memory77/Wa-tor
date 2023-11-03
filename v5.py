@@ -95,7 +95,7 @@ class Requin(Poisson):
         self.rect.y = y  
         self.temps_starvation_requin = 4
         self.temps_reproduction_requin = 6
-        self.energie = 4
+        self.energie = 3
         self.grille_poisson = grille_poisson
         self.case_size = case_size
         
@@ -183,7 +183,7 @@ requin = Requin(200,200, grille_poissons, CASE_SIZE)
 requins.add(requin)
 requin_2 = Requin(500,500, grille_poissons, CASE_SIZE)
 requins.add(requin_2)
-requin_3 = Requin(600,500, grille_poissons, CASE_SIZE)
+requin_3 = Requin(800,500, grille_poissons, CASE_SIZE)
 requins.add(requin_3)
 
 chronon_count = 0  # chronon à 0 avant le lancement du jeu
