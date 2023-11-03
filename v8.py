@@ -2,8 +2,6 @@ import pygame
 import random
 import time
 
-# Initialisation de Pygame
-pygame.init()
 
 class Monde:
     def __init__(self, largeur, hauteur, case_size):
@@ -13,9 +11,13 @@ class Monde:
         self.grille_poissons = [[False] * (largeur // case_size) for _ in range(hauteur // case_size)]
         self.poissons_tab = pygame.sprite.Group()
         self.requins_tab = pygame.sprite.Group()
+        #attributs pour les bonus
         self.grille_algues = [[False] * (largeur // case_size) for _ in range(hauteur // case_size)]
         self.algues_tab = pygame.sprite.Group()
-    
+        self.chronon = 0  # compteur de chronon pour le monde
+        self.cycle_jour_nuit = 5  # La durée d'un jour ou d'une nuit en termes de chronons
+        self.est_jour = True
+      
     def ajout_algue(self, x, y):
         nouvelle_algue = Algue(x, y, self)
         self.algues_tab.add(nouvelle_algue)
@@ -34,8 +36,16 @@ class Monde:
     def afficher(self):
         fenetre = pygame.display.set_mode((self.largeur, self.hauteur))
         pygame.display.set_caption("Déplacement et reproduction d'animaux")
-        ocean = (176, 224, 230)
-        fenetre.fill(ocean)
+        
+        
+        image_jour = pygame.image.load('img/wator-background.png')
+        image_nuit = pygame.image.load('img/wator-background-night.png')
+        
+        if self.est_jour:
+            fenetre.blit(image_jour, (0, 0))  
+        else:
+            fenetre.blit(image_nuit, (0, 0))  
+        
         self.algues_tab.draw(fenetre)
         self.poissons_tab.draw(fenetre)
         self.requins_tab.draw(fenetre)
@@ -54,7 +64,7 @@ class Poisson(pygame.sprite.Sprite):
         self.image = pygame.image.load('img/poisson5.png')
         self.rect = self.image.get_rect(topleft=(x, y))
         self.chronon = 0
-        self.temps_reproduction_poisson = 3
+        self.temps_reproduction_poisson = 2
         self.monde = monde
         
     def deplacer(self):
@@ -66,7 +76,7 @@ class Poisson(pygame.sprite.Sprite):
             nouvelle_position_x = self.rect.x + (dx * self.monde.case_size)
             nouvelle_position_y = self.rect.y + (dy * self.monde.case_size)
             
-            # Gestion du tp (téléportation aux bords de l'écran)
+            #gestion du tp 
             if nouvelle_position_x < 0:
                 nouvelle_position_x = self.monde.largeur - self.monde.case_size
             elif nouvelle_position_x >= self.monde.largeur:
@@ -77,7 +87,7 @@ class Poisson(pygame.sprite.Sprite):
             elif nouvelle_position_y >= self.monde.hauteur:
                 nouvelle_position_y = 0
 
-            # Conversion des coordonnées pixels en indices de la grille
+            # conversion des coordonnées pixels en indices de la grille
             index_x = nouvelle_position_x // self.monde.case_size
             index_y = nouvelle_position_y // self.monde.case_size
             
@@ -119,7 +129,7 @@ class Poisson(pygame.sprite.Sprite):
                 self.monde.ajout_poisson(ancienne_x, ancienne_y)
             elif self.__class__ == Requin:
                 self.monde.ajout_requin(ancienne_x, ancienne_y)
-                print('requin reproduit')
+                #print('requin reproduit')
             #marquer la case comme occupée et réinitialiser le temps de reproduction
             self.monde.grille_poissons[index_y][index_x] = True
         self.chronon = 0   
@@ -130,9 +140,9 @@ class Requin(Poisson):
         super().__init__(x, y, monde)
         self.image = pygame.image.load('img/req.png')
         self.rect = self.image.get_rect(topleft=(x, y))
-        self.temps_survie_requin = 8
-        self.temps_reproduction_requin = 10
-        self.energie = 10
+        self.temps_survie_requin = 3
+        self.temps_reproduction_requin = 6
+        self.energie = 8
         self.cpt_sans_mange = 0
         
     def update(self):
@@ -147,39 +157,58 @@ class Requin(Poisson):
             super().reproduire(ancienne_position_x,ancienne_position_y)
 
     def gestion_energie(self):
-    
-        a_mange = False
-        cpt_sans_mange = 0
-        directions = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
-        
-        for dx, dy in directions:
-            nouvelle_position_x = self.rect.x + dx * self.monde.case_size
-            nouvelle_position_y = self.rect.y + dy * self.monde.case_size
+        if self.monde.est_jour == False:
+            #print('les requins chassent')
+            #print('les requins chassent')
+            a_mange = False
+            cpt_sans_mange = 0
+            directions = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
+            
+            for dx, dy in directions:
+                nouvelle_position_x = self.rect.x + dx * self.monde.case_size
+                nouvelle_position_y = self.rect.y + dy * self.monde.case_size
 
-            if 0 <= nouvelle_position_x < self.monde.largeur and 0 <= nouvelle_position_y < self.monde.hauteur:
-                for fish in self.monde.poissons_tab:
-                    if isinstance(fish, Poisson) and not isinstance(fish, Requin):
-                        if fish.rect.x == nouvelle_position_x and fish.rect.y == nouvelle_position_y:
-                            fish.kill()  # enlève le poisson du groupe de sprites
-                            # print("poisson mangé")
-                            index_x = nouvelle_position_x // self.monde.case_size
-                            index_y = nouvelle_position_y // self.monde.case_size
-                            self.monde.grille_poissons[index_y][index_x] = False  #libère la grille
-                            self.energie += 1
-                            a_mange = True
-                            cpt_sans_mange = 0 #reinitialise le cpt 
-                            break  
+                if 0 <= nouvelle_position_x < self.monde.largeur and 0 <= nouvelle_position_y < self.monde.hauteur:
+                    for fish in self.monde.poissons_tab:
+                        if isinstance(fish, Poisson) and not isinstance(fish, Requin):
+                            if fish.rect.x == nouvelle_position_x and fish.rect.y == nouvelle_position_y:
+                                fish.kill()  # enlève le poisson du groupe de sprites
+                                #print("poisson mangé")
+                                index_x = nouvelle_position_x // self.monde.case_size
+                                index_y = nouvelle_position_y // self.monde.case_size
+                                self.monde.grille_poissons[index_y][index_x] = False  #libère la grille
+                                self.energie += 1
+                                a_mange = True
+                                cpt_sans_mange = 0 #reinitialise le cpt 
+                                break  
+                    
 
-        if not a_mange:
-            self.energie -= 1
-            self.cpt_sans_mange += 1  # Incrémenter l'attribut de l'instance
-        else:
-            self.cpt_sans_mange = 0  # Réinitialiser si le requin a mangé
+            if not a_mange:
+                self.energie -= 1
+                self.cpt_sans_mange += 1  
+                for requin in self.monde.requins_tab:
+                        if isinstance(requin, Requin) and cpt_sans_mange >= 2:
+                            if requin.rect.x == nouvelle_position_x and requin.rect.y == nouvelle_position_y:
+                                requin.kill
+                                print("poisson mangé")
+                                index_x = nouvelle_position_x // self.monde.case_size
+                                index_y = nouvelle_position_y // self.monde.case_size
+                                self.monde.grille_poissons[index_y][index_x] = False  #libère la grille
+                                self.energie += 1
+                                a_mange = True
+                                cpt_sans_mange = 0 #reinitialise le cpt 
+                                break  
+            else:
+                self.cpt_sans_mange = 0 
 
-        if self.energie <= 0 or self.cpt_sans_mange >= self.temps_survie_requin:
-            self.kill()  
+            if self.energie <= 0 or self.cpt_sans_mange >= self.temps_survie_requin:
+                self.kill()
+                # print(self.energie)
+                # print(self.cpt_sans_mange)
+                # print('requin mort')  
 
-
+# Initialisation de Pygame
+pygame.init()
 
 
 # Creation de l'instance monde
@@ -222,18 +251,24 @@ monde.ajout_algue(500, 750)
 monde.ajout_algue(200, 200)
 monde.ajout_algue(800, 200)
 
-# Boucle principale
+# boucle principale
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    
+      
+    #gérer le cycle jour/nuit
+    monde.chronon += 1
+    if monde.chronon % monde.cycle_jour_nuit == 0:
+        monde.est_jour = not monde.est_jour  
+
+                
     monde.afficher()  
     monde.poissons_tab.update()
     monde.requins_tab.update()
-    time.sleep(0.5)
-
+    time.sleep(0.4)
+    print(monde.chronon)
 
 # Quitter Pygame
 pygame.quit()
