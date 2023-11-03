@@ -159,9 +159,7 @@ class Requin(Poisson):
     def gestion_energie(self):
         if self.monde.est_jour == False:
             #print('les requins chassent')
-            #print('les requins chassent')
             a_mange = False
-            cpt_sans_mange = 0
             directions = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
             
             for dx, dy in directions:
@@ -179,25 +177,11 @@ class Requin(Poisson):
                                 self.monde.grille_poissons[index_y][index_x] = False  #libère la grille
                                 self.energie += 1
                                 a_mange = True
-                                cpt_sans_mange = 0 #reinitialise le cpt 
                                 break  
                     
-
             if not a_mange:
                 self.energie -= 1
                 self.cpt_sans_mange += 1  
-                for requin in self.monde.requins_tab:
-                        if isinstance(requin, Requin) and cpt_sans_mange >= 2:
-                            if requin.rect.x == nouvelle_position_x and requin.rect.y == nouvelle_position_y:
-                                requin.kill
-                                print("poisson mangé")
-                                index_x = nouvelle_position_x // self.monde.case_size
-                                index_y = nouvelle_position_y // self.monde.case_size
-                                self.monde.grille_poissons[index_y][index_x] = False  #libère la grille
-                                self.energie += 1
-                                a_mange = True
-                                cpt_sans_mange = 0 #reinitialise le cpt 
-                                break  
             else:
                 self.cpt_sans_mange = 0 
 
