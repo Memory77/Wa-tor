@@ -33,7 +33,11 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
+<<<<<<< HEAD
+set -gx VIRTUAL_ENV "/home/utilisateur/Documents/projets/projet-wator/Wa-tor/venv"
+=======
 set -gx VIRTUAL_ENV "/home/utilisateur/Documents/wa_tor/Wa-tor/venv"
+>>>>>>> 464805671c1f66d761607f80bc99ffa16123a43d
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

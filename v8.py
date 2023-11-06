@@ -17,6 +17,7 @@ class Monde:
         self.chronon = 0  # compteur de chronon pour le monde
         self.cycle_jour_nuit = 5  # La durée d'un jour ou d'une nuit en termes de chronons
         self.est_jour = True
+        self.fenetre = pygame.display.set_mode((self.largeur, self.hauteur))
       
     def ajout_algue(self, x, y):
         nouvelle_algue = Algue(x, y, self)
@@ -34,7 +35,7 @@ class Monde:
         self.requins_tab.add(nouveau_requin)
     
     def afficher(self):
-        fenetre = pygame.display.set_mode((self.largeur, self.hauteur))
+        #fenetre = pygame.display.set_mode((self.largeur, self.hauteur))
         pygame.display.set_caption("Déplacement et reproduction d'animaux")
         
         
@@ -42,13 +43,13 @@ class Monde:
         image_nuit = pygame.image.load('img/wator-background-night.png')
         
         if self.est_jour:
-            fenetre.blit(image_jour, (0, 0))  
+            self.fenetre.blit(image_jour, (0, 0))  
         else:
-            fenetre.blit(image_nuit, (0, 0))  
+            self.fenetre.blit(image_nuit, (0, 0))  
         
-        self.algues_tab.draw(fenetre)
-        self.poissons_tab.draw(fenetre)
-        self.requins_tab.draw(fenetre)
+        self.algues_tab.draw(self.fenetre)
+        self.poissons_tab.draw(self.fenetre)
+        self.requins_tab.draw(self.fenetre)
         pygame.display.update()
 
 class Algue(pygame.sprite.Sprite):

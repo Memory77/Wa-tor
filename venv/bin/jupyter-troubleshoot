@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+#!/home/utilisateur/Documents/projets/projet-wator/Wa-tor/venv/bin/python
+=======
 #!/home/utilisateur/Documents/wa_tor/Wa-tor/venv/bin/python
+>>>>>>> 464805671c1f66d761607f80bc99ffa16123a43d
 # -*- coding: utf-8 -*-
 import re
 import sys

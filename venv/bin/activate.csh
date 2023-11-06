@@ -8,7 +8,11 @@ alias deactivate 'test $?_OLD_VIRTUAL_PATH != 0 && setenv PATH "$_OLD_VIRTUAL_PA
 # Unset irrelevant variables.
 deactivate nondestructive
 
+<<<<<<< HEAD
+setenv VIRTUAL_ENV "/home/utilisateur/Documents/projets/projet-wator/Wa-tor/venv"
+=======
 setenv VIRTUAL_ENV "/home/utilisateur/Documents/wa_tor/Wa-tor/venv"
+>>>>>>> 464805671c1f66d761607f80bc99ffa16123a43d
 
 set _OLD_VIRTUAL_PATH="$PATH"
 setenv PATH "$VIRTUAL_ENV/bin:$PATH"
