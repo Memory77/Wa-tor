@@ -8,6 +8,7 @@ class Monde:
         self.largeur = largeur
         self.hauteur = hauteur
         self.case_size = case_size
+        self.fenetre = pygame.display.set_mode((self.largeur, self.hauteur))
         self.grille_poissons = [[False] * (largeur // case_size) for _ in range(hauteur // case_size)]
         self.poissons_tab = pygame.sprite.Group()
         self.requins_tab = pygame.sprite.Group()
@@ -15,7 +16,7 @@ class Monde:
         self.grille_algues = [[False] * (largeur // case_size) for _ in range(hauteur // case_size)]
         self.algues_tab = pygame.sprite.Group()
         self.chronon = 0  # compteur de chronon pour le monde
-        self.cycle_jour_nuit = 5  # La durée d'un jour ou d'une nuit en termes de chronons
+        self.cycle_jour_nuit = 5  #durée d'un jour ou d'une nuit en termes de chronons
         self.est_jour = True
         self.fenetre = pygame.display.set_mode((self.largeur, self.hauteur))
       
@@ -35,9 +36,7 @@ class Monde:
         self.requins_tab.add(nouveau_requin)
     
     def afficher(self):
-        #fenetre = pygame.display.set_mode((self.largeur, self.hauteur))
-        pygame.display.set_caption("Déplacement et reproduction d'animaux")
-        
+        pygame.display.set_caption("WATOR")
         
         image_jour = pygame.image.load('img/wator-background.png')
         image_nuit = pygame.image.load('img/wator-background-night.png')
@@ -55,14 +54,14 @@ class Monde:
 class Algue(pygame.sprite.Sprite):
     def __init__(self, x, y, monde):
         super().__init__()
-        self.image = pygame.image.load('img/algues.png')
+        self.image = pygame.image.load('img/algue (1).png')
         self.rect = self.image.get_rect(topleft=(x, y))
         self.monde = monde
         
 class Poisson(pygame.sprite.Sprite):
     def __init__(self, x, y, monde):
         super().__init__()
-        self.image = pygame.image.load('img/poisson5.png')
+        self.image = pygame.image.load('img/poisson5 (1).png')
         self.rect = self.image.get_rect(topleft=(x, y))
         self.chronon = 0
         self.temps_reproduction_poisson = 2
@@ -92,17 +91,17 @@ class Poisson(pygame.sprite.Sprite):
             index_x = nouvelle_position_x // self.monde.case_size
             index_y = nouvelle_position_y // self.monde.case_size
             
-            # Vérifier si la nouvelle position est libre
+            # vérifier si la nouvelle position est libre
             if not self.monde.grille_poissons[index_y][index_x] and not self.monde.grille_algues[index_y][index_x]:
-                # Libération de l'ancienne case
+                # libération de l'ancienne case
                 index_x_ancien = self.rect.x // self.monde.case_size
                 index_y_ancien = self.rect.y // self.monde.case_size
                 self.monde.grille_poissons[index_y_ancien][index_x_ancien] = False
                 
-                # Mise à jour de la grille pour la nouvelle position
+                # mise à jour de la grille pour la nouvelle position
                 self.monde.grille_poissons[index_y][index_x] = True
                 
-                # Mise à jour de la position de l'objet
+                # mise à jour de la position de l'objet
                 self.rect.x = nouvelle_position_x
                 self.rect.y = nouvelle_position_y
                 break
@@ -139,11 +138,11 @@ class Poisson(pygame.sprite.Sprite):
 class Requin(Poisson):
     def __init__(self, x, y, monde):
         super().__init__(x, y, monde)
-        self.image = pygame.image.load('img/req.png')
+        self.image = pygame.image.load('img/req (3).png')
         self.rect = self.image.get_rect(topleft=(x, y))
         self.temps_survie_requin = 3
         self.temps_reproduction_requin = 6
-        self.energie = 8
+        self.energie = 6
         self.cpt_sans_mange = 0
         
     def update(self):
@@ -231,7 +230,7 @@ monde.ajout_poisson(800, 800)
 monde.ajout_requin(100, 500)
 monde.ajout_requin(800, 100)
 monde.ajout_requin(200, 500)
-monde.ajout_requin(100, 100)
+monde.ajout_requin(500, 500)
 monde.ajout_algue(500, 750)
 monde.ajout_algue(200, 200)
 monde.ajout_algue(800, 200)
@@ -252,7 +251,7 @@ while running:
     monde.afficher()  
     monde.poissons_tab.update()
     monde.requins_tab.update()
-    time.sleep(0.4)
+    time.sleep(0.5)
     print(monde.chronon)
 
 # Quitter Pygame
