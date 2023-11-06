@@ -8,16 +8,15 @@ class Monde:
         self.largeur = largeur
         self.hauteur = hauteur
         self.case_size = case_size
-        self.grille_poissons = [
-            [False] * (largeur // case_size) for _ in range(hauteur // case_size)]
+        self.fenetre = pygame.display.set_mode((self.largeur, self.hauteur))
+        self.grille_poissons = [[False] * (largeur // case_size) for _ in range(hauteur // case_size)]
         self.poissons_tab = pygame.sprite.Group()
         self.requins_tab = pygame.sprite.Group()
         # attributs pour les bonus
-        self.grille_algues = [[False] * (largeur // case_size)
-                              for _ in range(hauteur // case_size)]
+        self.grille_algues = [[False] * (largeur // case_size) for _ in range(hauteur // case_size)]
         self.algues_tab = pygame.sprite.Group()
         self.chronon = 0  # compteur de chronon pour le monde
-        self.cycle_jour_nuit = 5  # La durée d'un jour ou d'une nuit en termes de chronons
+        self.cycle_jour_nuit = 5  #durée d'un jour ou d'une nuit en termes de chronons
         self.est_jour = True
 
     def ajout_algue(self, x, y):
@@ -36,27 +35,26 @@ class Monde:
         self.requins_tab.add(nouveau_requin)
 
     def afficher(self):
-        fenetre = pygame.display.set_mode((self.largeur, self.hauteur))
         pygame.display.set_caption("Déplacement et reproduction d'animaux")
 
         image_jour = pygame.image.load('img/wator-background.png')
         image_nuit = pygame.image.load('img/wator-background-night.png')
 
         if self.est_jour:
-            fenetre.blit(image_jour, (0, 0))
+            self.fenetre.blit(image_jour, (0, 0))
         else:
-            fenetre.blit(image_nuit, (0, 0))
+            self.fenetre.blit(image_nuit, (0, 0))
 
-        self.algues_tab.draw(fenetre)
-        self.poissons_tab.draw(fenetre)
-        self.requins_tab.draw(fenetre)
+        self.algues_tab.draw(self.fenetre)
+        self.poissons_tab.draw(self.fenetre)
+        self.requins_tab.draw(self.fenetre)
         pygame.display.update()
 
 
 class Algue(pygame.sprite.Sprite):
     def __init__(self, x, y, monde):
         super().__init__()
-        self.image = pygame.image.load('img/algues.png')
+        self.image = pygame.image.load('img/algue (1).png')
         self.rect = self.image.get_rect(topleft=(x, y))
         self.monde = monde
 
@@ -64,7 +62,7 @@ class Algue(pygame.sprite.Sprite):
 class Poisson(pygame.sprite.Sprite):
     def __init__(self, x, y, monde):
         super().__init__()
-        self.image = pygame.image.load('img/poisson5.png')
+        self.image = pygame.image.load('img/poisson5 (1).png')
         self.rect = self.image.get_rect(topleft=(x, y))
         self.chronon = 0
         self.temps_reproduction_poisson = 2
@@ -140,11 +138,11 @@ class Poisson(pygame.sprite.Sprite):
 class Requin(Poisson):
     def __init__(self, x, y, monde):
         super().__init__(x, y, monde)
-        self.image = pygame.image.load('img/req.png')
+        self.image = pygame.image.load('img/req (2).png')
         self.rect = self.image.get_rect(topleft=(x, y))
         self.temps_survie_requin = 3
         self.temps_reproduction_requin = 6
-        self.energie = 8
+        self.energie = 6
         self.cpt_sans_mange = 0
 
     def update(self):
