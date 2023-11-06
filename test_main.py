@@ -2,7 +2,7 @@ import pygame
 import random
 import time
 
-from test_classes import *
+from classes import *
 
 
 # Initialisation de Pygame
@@ -44,7 +44,7 @@ monde.ajout_poisson(800, 800)
 monde.ajout_requin(100, 500)
 monde.ajout_requin(800, 100)
 monde.ajout_requin(200, 500)
-monde.ajout_requin(100, 100)
+monde.ajout_requin(500, 500)
 monde.ajout_algue(500, 750)
 monde.ajout_algue(200, 200)
 monde.ajout_algue(800, 200)
@@ -64,7 +64,7 @@ while running:
     monde.afficher()
     monde.poissons_tab.update()
     monde.requins_tab.update()
-    time.sleep(0.4)
+    time.sleep(0.5)
     print(monde.chronon)
 
 # Quitter Pygame
