@@ -11,10 +11,10 @@ class Tableau:
         self.hauteur = hauteur
         self.taille_case = taille_case
         self.fenetre = pygame.display.set_mode((largeur, hauteur))
-        pygame.display.set_caption("Déplacement et reproduction d'animaux")
+        pygame.display.set_caption("Wa-Tor")
         self.animaux = []  # Liste pour stocker tous les animaux
         self.deplacement = self.deplacement_aleatoire()  # Générateur pour les déplacements aléatoires
-        self.delai = 500  # Délai entre les rafraîchissements de l'écran
+        self.delai = 800  # Délai entre les rafraîchissements de l'écran
 
         # Ajoutez des limites à la population maximale
         self.population_max_poissons = 200
@@ -42,7 +42,7 @@ class Tableau:
                 nouveaux_animaux.append(nouvel_animal)
                 animal.derniere_reproduction = time.time()  # Met à jour le temps de la dernière reproduction
             elif isinstance(animal, Requin) and animal.age >= 5 and time.time() - animal.derniere_reproduction >= animal.delai_reproduction:
-            # Faites de même pour les requins avec leur délai spécifique
+            # Fait de même pour les requins avec leur délai spécifique
                 x, y = animal.x, animal.y
                 nouvel_animal = type(animal)(self, animal.image, x, y)
                 nouveaux_animaux.append(nouvel_animal)
@@ -59,6 +59,11 @@ class Tableau:
         for poisson in poissons_a_manger:
             self.animaux.remove(poisson)
             requin.compteur_energie += 1  # Augmente le compteur d'énergie du requin
+            print(poissons_a_manger)
+
+
+
+
 
          # Vérifie le temps écoulé depuis la dernière fois que le requin a mangé
         temps_actuel = time.time()
@@ -68,7 +73,11 @@ class Tableau:
         if temps_ecoule >= 5:
             requin.derniere_mangee = temps_actuel
             requin.compteur_energie -= 1    
-
+           
+        # blocage du compteur à 8
+            if requin.compteur_energie > 8:
+                requin.compteur_energie = 8
+                
 
 
     def afficher(self):
@@ -85,7 +94,9 @@ class Tableau:
                 self.manger_poisson(animal)  # Vérifie s'il y a des poissons à manger
                 if animal.compteur_energie <= 0:
                     self.animaux.remove(animal)  # Le requin disparaît s'il n'a plus d'énergie
+                    
             self.fenetre.blit(animal.image, (animal.x, animal.y))  # Affiche l'image de chaque animal à sa position actuelle
+
 
         pygame.display.flip()  # Actualise l'affichage
         pygame.time.delay(self.delai)  # Délai entre les rafraîchissements de l'écran

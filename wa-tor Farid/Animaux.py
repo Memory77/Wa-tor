@@ -28,12 +28,12 @@ class Animal:
 class Poisson(Animal):
     def __init__(self, tableau, image, x, y):
         super().__init__(tableau, image, x, y)
-        self.delai_reproduction = 15  # Délai de reproduction spécifique aux poissons
+        self.delai_reproduction = 7  # Délai de reproduction spécifique aux poissons
 
 
 class Requin(Animal):
     def __init__(self, tableau, image, x, y):
         super().__init__(tableau, image, x, y)
-        self.compteur_energie = 10  # Compteur d'énergie du requin
+        self.compteur_energie = 3  # Compteur d'énergie du requin
         self.derniere_mangee = time.time()  # Initialise le temps de la dernière fois qu'il a mangé
-        self.delai_reproduction = 10  # Délai de reproduction spécifique aux requins
+        self.delai_reproduction = 12  # Délai de reproduction spécifique aux requins
